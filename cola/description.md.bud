@@ -1,0 +1,7 @@
+# mulle-iovec
+
+#### 🧺 iovec compatibility layer
+
+It's supposed to provide a uniform way of doing scatter/gather I/O on various
+platforms. Windows provides scatter/gather but under different names. For
+very barebones system, there is an emulation using read/write.

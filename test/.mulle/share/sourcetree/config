@@ -1,0 +1,1 @@
+mulle-iovec;${MULLE__IOVEC_NODETYPE:-tar};;475D915D-9C3F-49D1-9A10-BFC67B52C296;${MULLE__IOVEC_URL:-https://github.com/nat/mulle-iovec/archive/${MULLE_TAG}.tar.gz};${MULLE__IOVEC_BRANCH};${MULLE__IOVEC_TAG:-latest};;

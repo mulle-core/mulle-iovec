@@ -1,0 +1,6 @@
+Test: Writing two strings with mulle_writev
+Bytes written: 13
+Test: Reading back with mulle_readv
+Bytes read: 13
+Read content: 'Hello World!
+'

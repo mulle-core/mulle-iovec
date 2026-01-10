@@ -1,0 +1,25 @@
+{
+   project =
+   {
+      description="🧺 iovec compatiblity layer";
+      domain="github";
+      language="c";
+      dialect="c";
+      name="mulle-iovec";
+      user="mulle-core";
+      repo="mulle-iovec";
+      homepage="https://github.com/mulle-core/mulle-iovec";
+      license="BSD-3 LIECENSED";
+   };
+   dependencies =
+   (
+      {
+         description="🔀 Cross-platform C compiler glue (and some cpp conveniences)";
+         domain="github";
+         name="mulle-c11";
+         repo="mulle-c11";
+         url="https://github.com/mulle-c/mulle-c11";
+         user="mulle-c";
+      }
+   );
+}
