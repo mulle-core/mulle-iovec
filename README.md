@@ -1,6 +1,6 @@
 # mulle-iovec
 
-#### 🧺 iovec compatiblity layer
+#### 🧺 cross-platform scatter/gather I/O for files and pipes (readv/writev emulation)
 
 # mulle-iovec
 
@@ -10,11 +10,16 @@ It's supposed to provide a uniform way of doing scatter/gather I/O on various
 platforms. Windows provides scatter/gather but under different names. For
 very barebones system, there is an emulation using read/write.
 
+Supported everywhere: regular files and pipes. On POSIX `int` fds also happen
+to accept sockets, but sockets are not part of the contract on any platform —
+on Windows use `WSARecv`/`WSASend` directly.
+
 
 
 | Release Version                                       | Release Notes  | AI Documentation
 |-------------------------------------------------------|----------------|---------------
 | ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-core/mulle-iovec.svg) [![Build Status](https://github.com/mulle-core/mulle-iovec/workflows/CI/badge.svg)](//github.com/mulle-core/mulle-iovec/actions) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for mulle-iovec](https://deepwiki.com/mulle-core/mulle-iovec)
+
 
 
 

@@ -8,7 +8,7 @@
 #
 cmake_minimum_required( VERSION 3.13...99.99)
 
-project( mulle-iovec VERSION 0.0.1 LANGUAGES C)
+project( mulle-iovec VERSION 0.7.56 LANGUAGES C)
 
 # if use embedded project with symlinks and you want to distribute their
 # headers you probably need to turn this on

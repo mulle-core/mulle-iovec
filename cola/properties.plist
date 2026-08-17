@@ -1,7 +1,7 @@
 {
    project =
    {
-      description="🧺 iovec compatiblity layer";
+      description="🧺 cross-platform scatter/gather I/O for files and pipes (readv/writev emulation)";
       domain="github";
       language="c";
       dialect="c";
@@ -9,7 +9,7 @@
       user="mulle-core";
       repo="mulle-iovec";
       homepage="https://github.com/mulle-core/mulle-iovec";
-      license="BSD-3 LIECENSED";
+      license="BSD-3-Clause";
    };
    dependencies =
    (

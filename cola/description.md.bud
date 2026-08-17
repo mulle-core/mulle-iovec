@@ -5,3 +5,7 @@
 It's supposed to provide a uniform way of doing scatter/gather I/O on various
 platforms. Windows provides scatter/gather but under different names. For
 very barebones system, there is an emulation using read/write.
+
+Supported everywhere: regular files and pipes. On POSIX `int` fds also happen
+to accept sockets, but sockets are not part of the contract on any platform —
+on Windows use `WSARecv`/`WSASend` directly.

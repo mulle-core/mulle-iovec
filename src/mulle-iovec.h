@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 #include <stddef.h>
+#include <errno.h>
 #include <sys/types.h>
 
 
@@ -50,7 +51,7 @@ static inline ssize_t
 #elif defined( _WIN32)
 # include "mulle-iovec-windows.h"
 
-# define MULLE_IOVEC_NATIVE   1
+# define MULLE_IOVEC_WINDOWS   1
 
 static inline ssize_t
    mulle_readv( int fd, struct mulle_iovec *iov, int iovcnt)
@@ -80,7 +81,52 @@ ssize_t
 
 
 /*
- *  (c) <|YEAR|> nat <|ORGANIZATION|>
+ * mulle_writev_all retries until every buffer has been written or an error
+ * occurs. Unlike mulle_writev it never returns a short count; interrupted
+ * operations are retried internally. It returns the total number of bytes
+ * written, or -1 on error.
+ */
+static inline ssize_t
+   mulle_writev_all( int fd, struct mulle_iovec *iov, int iovcnt)
+{
+   ssize_t             total = 0;
+   ssize_t             n;
+   struct mulle_iovec  *cur;
+
+   cur = iov;
+   while( iovcnt > 0)
+   {
+      n = mulle_writev( fd, cur, iovcnt);
+      if( n < 0)
+      {
+         if( errno == EINTR)
+            continue;
+         return( total ? total : -1);
+      }
+      if( n == 0)
+         break;
+
+      total += n;
+      while( n >= (ssize_t) cur->iov_len)
+      {
+         n    -= (ssize_t) cur->iov_len;
+         cur++;
+         iovcnt--;
+         if( iovcnt <= 0)
+            break;
+      }
+      if( iovcnt > 0)
+      {
+         cur->iov_base = (void *) ((char *) cur->iov_base + n);
+         cur->iov_len -= (size_t) n;
+      }
+   }
+   return( total);
+}
+
+
+/*
+ *  (c) 2025 nat, Mulle kybernetiK
  *
  *  version:  major, minor, patch
  */
