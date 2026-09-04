@@ -14,12 +14,12 @@
    dependencies =
    (
       {
-         description="🔀 Cross-platform C compiler glue (and some cpp conveniences)";
+         description="🌋 Amalgamated library of mulle-core + mulle-concurrent + mulle-c";
          domain="github";
-         name="mulle-c11";
-         repo="mulle-c11";
-         url="https://github.com/mulle-c/mulle-c11";
-         user="mulle-c";
+         name="mulle-core";
+         repo="mulle-core";
+         url="https://github.com/mulle-core/mulle-core";
+         user="mulle-core";
       }
    );
 }

@@ -31,6 +31,13 @@ src/generic/include-private.h
 )
 
 #
+# contents selected with patternfile ??-header--private-headers
+#
+set( PRIVATE_HEADERS
+src/mulle-iovec-private.h
+)
+
+#
 # contents selected with patternfile ??-header--public-generated-headers
 #
 set( PUBLIC_GENERATED_HEADERS

@@ -23,6 +23,10 @@ on Windows use `WSARecv`/`WSASend` directly.
 
 
 
+## Documentation & Guides
+
+* [API Summary](asset/dox/api/toc)
+
 
 
 
@@ -77,7 +81,7 @@ Or if you really want to do it exhaustively:
 
 | Requirements                                 | Description
 |----------------------------------------------|-----------------------
-| [mulle-c11](https://github.com/mulle-c/mulle-c11)             | 🔀 Cross-platform C compiler glue (and some cpp conveniences)
+| [mulle-core](https://github.com/mulle-core/mulle-core)             | 🌋 Amalgamated library of mulle-core + mulle-concurrent + mulle-c
 
 #### Download & Install
 
