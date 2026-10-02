@@ -1,0 +1,7 @@
+writev: 100000
+writev_all: 100000
+readv: 100000
+verify: ok
+multi writev: 12000
+multi readv: 12000
+multi verify: ok

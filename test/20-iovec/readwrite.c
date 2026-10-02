@@ -1,10 +1,21 @@
 #include <mulle-iovec/mulle-iovec.h>
 
 #include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
 #include <string.h>
-#include <stdlib.h>
+#include <fcntl.h>
+
+#if defined( _WIN32)
+# include <io.h>
+#else
+# include <unistd.h>
+#endif
+
+
+#if defined( _WIN32)
+# define MULLE_IOVEC_TEST_BINARY  O_BINARY
+#else
+# define MULLE_IOVEC_TEST_BINARY  0
+#endif
 
 
 int   main( int argc, char *argv[])
@@ -30,8 +41,10 @@ int   main( int argc, char *argv[])
    write_iov[1].iov_base = str2;
    write_iov[1].iov_len  = strlen( str2);
 
-   // Create temporary file
-   fd = open( "/tmp/test_iovec.txt", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+   // Create temporary file in the current directory (works on all platforms)
+   fd = open( "test_iovec.tmp",
+              O_CREAT | O_WRONLY | O_TRUNC | MULLE_IOVEC_TEST_BINARY,
+              0644);
    if( fd == -1)
    {
       printf( "Error: Failed to create test file\n");
@@ -42,7 +55,7 @@ int   main( int argc, char *argv[])
    bytes_written = mulle_writev( fd, write_iov, 2);
    close( fd);
 
-   printf( "Bytes written: %zd\n", bytes_written);
+   printf( "Bytes written: %d\n", (int) bytes_written);
 
    printf( "Test: Reading back with mulle_readv\n");
 
@@ -55,7 +68,7 @@ int   main( int argc, char *argv[])
    read_iov[1].iov_len  = strlen( str2);
 
    // Read back using mulle_readv
-   fd = open( "/tmp/test_iovec.txt", O_RDONLY);
+   fd = open( "test_iovec.tmp", O_RDONLY | MULLE_IOVEC_TEST_BINARY);
    if( fd == -1)
    {
       printf( "Error: Failed to open test file for reading\n");
@@ -65,11 +78,11 @@ int   main( int argc, char *argv[])
    bytes_read = mulle_readv( fd, read_iov, 2);
    close( fd);
 
-   printf( "Bytes read: %zd\n", bytes_read);
+   printf( "Bytes read: %d\n", (int) bytes_read);
    printf( "Read content: '%s%s'\n", buffer1, buffer2);
 
    // Clean up
-   unlink( "/tmp/test_iovec.txt");
+   remove( "test_iovec.tmp");
 
    return( 0);
 }

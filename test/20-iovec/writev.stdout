@@ -1,0 +1,5 @@
+write 3 iovecs: 13
+content: 'Hello World!
+'
+write 0 iovecs: 0
+write bad fd: EBADF

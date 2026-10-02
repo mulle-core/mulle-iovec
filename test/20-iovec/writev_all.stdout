@@ -1,0 +1,4 @@
+writev_all: 10000
+read: 10000
+verify: ok
+writev_all 0 iovecs: 0

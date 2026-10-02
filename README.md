@@ -14,6 +14,13 @@ Supported everywhere: regular files and pipes. On POSIX `int` fds also happen
 to accept sockets, but sockets are not part of the contract on any platform —
 on Windows use `WSARecv`/`WSASend` directly.
 
+Bulk transfers are chunked internally where the platform requires it. POSIX
+`readv`/`writev` cap a single call at `MAX_RW_COUNT` (about 2 GB) and return a
+short count, while Windows `ReadFile`/`WriteFile` take a 32-bit length, so an
+iovec longer than `MAXDWORD` (4 GB) is split into several transfers. A short
+transfer stops the call; use `mulle_writev_all` to retry until everything is
+written.
+
 
 
 | Release Version                                       | Release Notes  | AI Documentation

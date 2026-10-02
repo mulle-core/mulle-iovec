@@ -1,0 +1,6 @@
+pipe write: 13
+pipe read: 13
+pipe content: 'Hello, World!'
+short write: 3
+short read: 3
+short content: 'abc'

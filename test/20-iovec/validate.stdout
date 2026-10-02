@@ -1,0 +1,11 @@
+get_length(2) = 3
+get_length(0) = 0
+get_length(-1): EINVAL
+get_length(IOV_MAX+1): EINVAL
+get_length(NULL,1): EINVAL
+get_length(overflow): EINVAL
+validate(2) = 0
+validate(-1): EINVAL
+validate(IOV_MAX+1): EINVAL
+validate(NULL,1): EINVAL
+validate(0) = 0

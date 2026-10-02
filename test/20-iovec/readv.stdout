@@ -1,0 +1,6 @@
+read 2 iovecs: 12
+buffer1: 'Hello Wo'
+buffer2: 'rld!'
+read at eof: 0
+read 0 iovecs: 0
+read bad fd: EBADF

@@ -1,0 +1,5 @@
+writev IOV_MAX: 1024
+readv IOV_MAX: 1024
+verify: ok
+validate(IOV_MAX) = 0
+get_length(zeroes) = 5

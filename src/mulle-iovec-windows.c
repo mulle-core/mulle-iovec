@@ -7,7 +7,12 @@
  * Implementation Details:
  * - Uses _get_osfhandle() to convert POSIX file descriptors to Windows HANDLEs
  * - Loops through each iovec buffer calling ReadFile/WriteFile for each one
+ * - ReadFile/WriteFile take the byte count as a DWORD, so a single iovec longer
+ *   than MAXDWORD is split into multiple transfers (the POSIX kernel does the
+ *   same with MAX_RW_COUNT). The split limit is configurable for testing.
  * - For reads: stops early if a buffer isn't completely filled (matching readv behavior)
+ * - For writes: stops at the first short write, so later buffers are never
+ *   written as if the earlier one had completed (matching writev behavior)
  * - Properly handles error conditions and sets errno appropriately
  * - Returns total number of bytes read/written across all buffers
  *
@@ -35,23 +40,16 @@
 #include <io.h>
 #include <errno.h>
 
-static int
-   mulle_iovec_validate_arguments_windows( struct mulle_iovec *iov, int iovcnt)
+
+static DWORD   mulle_iovec_windows_max_transfer = MAXDWORD;
+
+
+void   mulle_iovec_windows_set_max_transfer( size_t value)
 {
-   int   i;
+   if( value == 0 || value > (size_t) MAXDWORD)
+      value = (size_t) MAXDWORD;
 
-   if( mulle_iovec_validate_arguments( iov, iovcnt))
-      return( -1);
-
-   for( i = 0; i < iovcnt; i++)
-   {
-      if( iov[i].iov_len > (size_t) MAXDWORD)
-      {
-         errno = EINVAL;
-         return( -1);
-      }
-   }
-   return( 0);
+   mulle_iovec_windows_max_transfer = (DWORD) value;
 }
 
 
@@ -76,9 +74,11 @@ ssize_t   mulle_readv_windows( int fd, struct mulle_iovec *iov, int iovcnt)
    HANDLE  handle;
    ssize_t total_read = 0;
    int     i;
+   size_t  done;
+   size_t  chunk;
    DWORD   bytes_read_now;
 
-   if( mulle_iovec_validate_arguments_windows( iov, iovcnt))
+   if( mulle_iovec_validate_arguments( iov, iovcnt))
       return( -1);
 
    handle = (HANDLE) _get_osfhandle( fd);
@@ -90,16 +90,27 @@ ssize_t   mulle_readv_windows( int fd, struct mulle_iovec *iov, int iovcnt)
 
    for( i = 0; i < iovcnt; i++)
    {
-      if( ! ReadFile( handle, iov[i].iov_base, (DWORD) iov[i].iov_len, &bytes_read_now, NULL))
+      done = 0;
+      while( done < iov[i].iov_len)
       {
-         errno = mulle_iovec_errno_map();
-         if( total_read)
+         chunk = iov[i].iov_len - done;
+         if( chunk > (size_t) mulle_iovec_windows_max_transfer)
+            chunk = (size_t) mulle_iovec_windows_max_transfer;
+
+         if( ! ReadFile( handle, (char *) iov[i].iov_base + done,
+                         (DWORD) chunk, &bytes_read_now, NULL))
+         {
+            errno = mulle_iovec_errno_map();
+            if( total_read)
+               return( total_read);
+            return( -1);
+         }
+
+         total_read += bytes_read_now;
+         done       += bytes_read_now;
+         if( bytes_read_now < chunk)
             return( total_read);
-         return( -1);
       }
-      total_read += bytes_read_now;
-      if( bytes_read_now < iov[i].iov_len)
-         break;
    }
    return( total_read);
 }
@@ -110,9 +121,11 @@ ssize_t   mulle_writev_windows( int fd, struct mulle_iovec *iov, int iovcnt)
    HANDLE  handle;
    ssize_t total_written = 0;
    int     i;
+   size_t  done;
+   size_t  chunk;
    DWORD   bytes_written_now;
 
-   if( mulle_iovec_validate_arguments_windows( iov, iovcnt))
+   if( mulle_iovec_validate_arguments( iov, iovcnt))
       return( -1);
 
    handle = (HANDLE) _get_osfhandle( fd);
@@ -124,18 +137,29 @@ ssize_t   mulle_writev_windows( int fd, struct mulle_iovec *iov, int iovcnt)
 
    for( i = 0; i < iovcnt; i++)
    {
-      if( ! WriteFile( handle, iov[i].iov_base, (DWORD) iov[i].iov_len, &bytes_written_now, NULL))
+      done = 0;
+      while( done < iov[i].iov_len)
       {
-         errno = mulle_iovec_errno_map();
-         if( total_written)
+         chunk = iov[i].iov_len - done;
+         if( chunk > (size_t) mulle_iovec_windows_max_transfer)
+            chunk = (size_t) mulle_iovec_windows_max_transfer;
+
+         if( ! WriteFile( handle, (char *) iov[i].iov_base + done,
+                          (DWORD) chunk, &bytes_written_now, NULL))
+         {
+            errno = mulle_iovec_errno_map();
+            if( total_written)
+               return( total_written);
+            return( -1);
+         }
+
+         total_written += bytes_written_now;
+         done          += bytes_written_now;
+         if( bytes_written_now < chunk)
             return( total_written);
-         return( -1);
       }
-      total_written += bytes_written_now;
-      if( bytes_written_now < iov[i].iov_len)
-         break;
    }
-   return( total_written );
+   return( total_written);
 }
 
 #endif
