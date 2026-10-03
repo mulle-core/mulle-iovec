@@ -130,7 +130,7 @@ static inline ssize_t
  *
  *  version:  major, minor, patch
  */
-#define MULLE__IOVEC_VERSION  ((0UL << 20) | (7 << 8) | 56)
+#define MULLE__IOVEC_VERSION  ((0UL << 20) | (8 << 8) | 0)
 
 
 static inline unsigned int   mulle_iovec_get_version_major( void)
