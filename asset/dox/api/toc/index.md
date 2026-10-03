@@ -156,8 +156,16 @@ Not part of the public API contract, but declared in a header so the test suite
 can exercise them:
 
 ```c
+MULLE__IOVEC_GLOBAL
 int      mulle_iovec_validate_arguments( struct mulle_iovec *iov, int iovcnt);
+
+MULLE__IOVEC_GLOBAL
 size_t   mulle_iovec_get_length( struct mulle_iovec *iov, int iovcnt);
+
+#ifdef _WIN32
+MULLE__IOVEC_GLOBAL
+void     mulle_iovec_windows_set_max_transfer( size_t value);
+#endif
 ```
 - `mulle_iovec_validate_arguments` — shared argument validation used by the
   emulated and Windows backends. Returns `0` on success; sets `errno = EINVAL`
@@ -165,6 +173,10 @@ size_t   mulle_iovec_get_length( struct mulle_iovec *iov, int iovcnt);
   a positive count, or the sum of `iov_len` overflows `SSIZE_MAX`.
 - `mulle_iovec_get_length` — returns the aggregate length of the iovec array,
   or `(size_t) -1` with `errno = EINVAL` under the same failure conditions.
+- `mulle_iovec_windows_set_max_transfer` — Windows-only testing hook that
+  limits how many bytes a single `ReadFile`/`WriteFile` transfer may cover; `0`
+  or a value greater than `MAXDWORD` resets it to `MAXDWORD`. Declared under
+  `#ifdef _WIN32`.
 
 ## 4. Performance Characteristics
 
