@@ -1,5 +1,6 @@
 ## 0.8.0
 
+
 feature: add Windows-only transfer-size testing hook and public API docs
 
 * document ``mulle_iovec_windows_set_max_transfer`,` a Windows-only hook that caps bytes per `ReadFile`/`WriteFile` transfer (values of `0` or above `MAXDWORD` reset to `MAXDWORD`)
