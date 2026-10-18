@@ -25,7 +25,7 @@ written.
 
 | Release Version                                       | Release Notes  | AI Documentation
 |-------------------------------------------------------|----------------|---------------
-| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-core/mulle-iovec.svg) [![Build Status](https://github.com/mulle-core/mulle-iovec/workflows/CI/badge.svg)](//github.com/mulle-core/mulle-iovec/actions) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for mulle-iovec](https://deepwiki.com/mulle-core/mulle-iovec)
+| ![Mulle kybernetiK tag](https://img.shields.io/github/tag/mulle-core/mulle-iovec.svg) ![standard: C11](pix/c11.svg) ![apis: ansi](pix/apis-ansi.svg) [![Build Status](https://github.com/mulle-core/mulle-iovec/workflows/CI/badge.svg)](//github.com/mulle-core/mulle-iovec/actions) | [RELEASENOTES](RELEASENOTES.md) | [DeepWiki for mulle-iovec](https://deepwiki.com/mulle-core/mulle-iovec)
 
 
 
